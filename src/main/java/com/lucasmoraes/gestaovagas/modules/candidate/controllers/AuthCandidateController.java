@@ -1,8 +1,7 @@
-package com.lucasmoraes.gestaovagas.modules.company.controllers;
+package com.lucasmoraes.gestaovagas.modules.candidate.controllers;
 
-import com.lucasmoraes.gestaovagas.modules.company.DTO.AuthCompanyDTO;
-import com.lucasmoraes.gestaovagas.modules.company.useCases.AuthCompanyUseCase;
-import org.apache.tomcat.websocket.AuthenticationException;
+import com.lucasmoraes.gestaovagas.modules.candidate.DTO.AuthCandidateRequestDTO;
+import com.lucasmoraes.gestaovagas.modules.candidate.useCases.AuthCandidateUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,16 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/company")
-public class AuthCompanyController {
+@RequestMapping("/candidate")
+public class AuthCandidateController {
     @Autowired
-    private AuthCompanyUseCase authCompanyUseCase;
+    private AuthCandidateUseCase authCandidateUseCase;
 
     @PostMapping("/auth")
-    public ResponseEntity authCompany(@RequestBody AuthCompanyDTO authCompanyDTO) {
+    public ResponseEntity<Object> auth(@RequestBody AuthCandidateRequestDTO authCandidateRequestDTO) {
         try {
-            String token = this.authCompanyUseCase.execute(authCompanyDTO);
-
+            var token = this.authCandidateUseCase.execute(authCandidateRequestDTO);
             return ResponseEntity.ok().body(token);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());

@@ -2,6 +2,7 @@ package com.lucasmoraes.gestaovagas.modules.company.useCases;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.lucasmoraes.gestaovagas.modules.company.DTO.AuthCompanyDTO;
+import com.lucasmoraes.gestaovagas.modules.company.DTO.AuthCompanyResponseDTO;
 import com.lucasmoraes.gestaovagas.modules.company.repositories.CompanyRepository;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import com.auth0.jwt.JWT;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 
 @Service
 public class AuthCompanyUseCase {
@@ -26,7 +28,7 @@ public class AuthCompanyUseCase {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public String execute(AuthCompanyDTO authCompanyDTO) throws AuthenticationException {
+    public AuthCompanyResponseDTO execute(AuthCompanyDTO authCompanyDTO) throws AuthenticationException {
         var company = this.companyRepository.findByUsername(authCompanyDTO.getUsername());
 
         if (!company.isPresent()) {
@@ -40,11 +42,20 @@ public class AuthCompanyUseCase {
         }
 
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
+
+        var expiresIn = Instant.now().plus(Duration.ofHours(2));
+
         String token = JWT.create().withIssuer("lucasmoraes")
-                .withExpiresAt(Instant.now().plus(Duration.ofHours(2)))
+                .withExpiresAt(expiresIn)
                 .withSubject(company.get().getId().toString())
+                .withClaim("roles", Arrays.asList("COMPANY"))
                 .sign(algorithm);
 
-        return token;
+        var authCompanyResponseDTO = AuthCompanyResponseDTO.builder()
+                .access_token()
+                .expires_in(expiresIn.toEpochMilli())
+                .build();
+
+        return authCompanyResponseDTO;
     }
 }
