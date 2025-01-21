@@ -13,24 +13,38 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
+
     @Autowired
-    private SecurityFilter securityFilter;
+    private SecurityCompanyFilter securityCompanyFilter;
 
     @Autowired
     private SecurityCandidateFilter securityCandidateFilter;
 
+    private static final String[] PUBLIC_ENDPOINTS = {
+            "/candidate",
+            "/company",
+            "/company/auth",
+            "/candidate/auth"
+    };
+
+    private static final String[] SWAGGER_ENDPOINTS = {
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-resources/**",
+            "/webjars/**",
+            "/actuator/**"
+    };
+
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/candidate").permitAll()
-                            .requestMatchers("/company").permitAll()
-                            .requestMatchers("/company/auth").permitAll()
-                            .requestMatchers("/candidate/auth").permitAll();
-                    auth.anyRequest().authenticated();
+                    auth.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                            .requestMatchers(SWAGGER_ENDPOINTS).permitAll()
+                            .anyRequest().authenticated();
                 })
                 .addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class)
-                .addFilterBefore(securityFilter, BasicAuthenticationFilter.class);
+                .addFilterBefore(securityCompanyFilter, BasicAuthenticationFilter.class);
 
         return http.build();
     }

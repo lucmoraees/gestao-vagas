@@ -22,9 +22,9 @@ public class SecurityCandidateFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getRequestURI().startsWith("/candidate")) {
-            String authorizationHeader = request.getHeader("Authorization");
+        String authorizationHeader = request.getHeader("Authorization");
 
+        if (request.getRequestURI().startsWith("/candidate")) {
             if (authorizationHeader != null) {
                 var token = this.jwtCandidateProvider.validateToken(authorizationHeader);
 

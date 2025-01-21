@@ -52,7 +52,7 @@ public class AuthCompanyUseCase {
                 .sign(algorithm);
 
         var authCompanyResponseDTO = AuthCompanyResponseDTO.builder()
-                .access_token()
+                .access_token(token)
                 .expires_in(expiresIn.toEpochMilli())
                 .build();
 

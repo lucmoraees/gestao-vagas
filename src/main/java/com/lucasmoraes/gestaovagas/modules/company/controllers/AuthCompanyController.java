@@ -1,6 +1,7 @@
 package com.lucasmoraes.gestaovagas.modules.company.controllers;
 
 import com.lucasmoraes.gestaovagas.modules.company.DTO.AuthCompanyDTO;
+import com.lucasmoraes.gestaovagas.modules.company.DTO.AuthCompanyResponseDTO;
 import com.lucasmoraes.gestaovagas.modules.company.useCases.AuthCompanyUseCase;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,9 @@ public class AuthCompanyController {
     @PostMapping("/auth")
     public ResponseEntity authCompany(@RequestBody AuthCompanyDTO authCompanyDTO) {
         try {
-            String token = this.authCompanyUseCase.execute(authCompanyDTO);
+            AuthCompanyResponseDTO response = this.authCompanyUseCase.execute(authCompanyDTO);
 
-            return ResponseEntity.ok().body(token);
+            return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
