@@ -25,7 +25,7 @@ public class SecurityCompanyFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
 
         if (request.getRequestURI().startsWith("/company")) {
-            if (header != null && header.startsWith("Bearer ")) {
+            if (header != null) {
                 var token = this.jwtProvider.validateToken(header);
 
                 if (token == null) {
@@ -35,7 +35,7 @@ public class SecurityCompanyFilter extends OncePerRequestFilter {
 
                 var roles = token.getClaim("roles").asList(Object.class);
                 var grants = roles.stream()
-                        .map(role -> new SimpleGrantedAuthority("ROLE_" + roles))
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase()))
                         .toList();
 
                 request.setAttribute("company_id", token.getSubject());

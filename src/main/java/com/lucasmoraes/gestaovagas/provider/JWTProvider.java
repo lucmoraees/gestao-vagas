@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JWTProvider {
+
     @Value("${security.token.secret}")
     private String secretKey;
 
@@ -23,8 +24,8 @@ public class JWTProvider {
                     .verify(token);
 
             return tokenDecoded;
-        } catch (JWTVerificationException e) {
-            e.printStackTrace();
+        } catch (JWTVerificationException ex) {
+            ex.printStackTrace();
             return null;
         }
     }

@@ -15,8 +15,6 @@ public class JWTCandidateProvider {
     public DecodedJWT validateToken(String token) {
         token = token.replace("Bearer ", "");
 
-        System.out.println(token);
-
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
         try {
