@@ -20,31 +20,29 @@ public class SecurityConfig {
     @Autowired
     private SecurityCandidateFilter securityCandidateFilter;
 
-    private static final String[] PUBLIC_ENDPOINTS = {
-            "/candidate",
-            "/company",
-            "/company/auth",
-            "/candidate/auth"
-    };
-
-    private static final String[] SWAGGER_ENDPOINTS = {
+    private static final String[] PERMIT_ALL_LIST = {
             "/swagger-ui/**",
             "/v3/api-docs/**",
-            "/swagger-resources/**",
-            "/webjars/**",
+            "/swagger-resource/**",
             "/actuator/**"
     };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                            .requestMatchers(SWAGGER_ENDPOINTS).permitAll()
-                            .anyRequest().authenticated();
-                })
-                .addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class)
-                .addFilterBefore(securityCompanyFilter, BasicAuthenticationFilter.class);
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> {
+                auth
+                        .requestMatchers("/candidate").permitAll()
+                        .requestMatchers("/company").permitAll()
+                        .requestMatchers("/company/auth").permitAll()
+                        .requestMatchers("/candidate/auth").permitAll()
+                        .requestMatchers(PERMIT_ALL_LIST).permitAll()
+//                        .anyRequest().permitAll();
+                        .anyRequest().authenticated();
+            })
+            .addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class)
+            .addFilterBefore(securityCompanyFilter, BasicAuthenticationFilter.class);
 
         return http.build();
     }

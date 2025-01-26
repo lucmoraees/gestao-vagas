@@ -1,5 +1,6 @@
 package com.lucasmoraes.gestaovagas.modules.candidate.useCases;
 
+import com.lucasmoraes.gestaovagas.exceptions.UserNotFoundException;
 import com.lucasmoraes.gestaovagas.modules.candidate.DTO.ProfileCandidateResponseDTO;
 import com.lucasmoraes.gestaovagas.modules.candidate.entities.CandidateEntity;
 import com.lucasmoraes.gestaovagas.modules.candidate.repositories.CandidateRepository;
@@ -17,7 +18,7 @@ public class ProfileCandidateUseCase {
 
     public ProfileCandidateResponseDTO execute(UUID candidateId) {
         var candidate = this.cadCandidateRepository.findById(candidateId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException());
 
         var candidateDTO = ProfileCandidateResponseDTO.builder()
                 .id(candidate.getId())
