@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ListAllJobsByFilterUseCase {
+public class
+ListAllJobsByFilterUseCase {
     @Autowired
     private JobRepository jobRepository;
 
