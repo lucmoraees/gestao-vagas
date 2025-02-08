@@ -1,8 +1,10 @@
 package com.lucasmoraes.gestaovagas.modules.company.controllers;
 
+import com.lucasmoraes.gestaovagas.modules.candidate.entities.CandidateEntity;
 import com.lucasmoraes.gestaovagas.modules.company.DTO.CreateJobDTO;
 import com.lucasmoraes.gestaovagas.modules.company.entities.JobEntity;
 import com.lucasmoraes.gestaovagas.modules.company.useCases.CreateJobUseCase;
+import com.lucasmoraes.gestaovagas.modules.company.useCases.ListAllJobsByCompanyUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,6 +32,9 @@ public class JobController {
     @Autowired
     CreateJobUseCase createJobUseCase;
 
+    @Autowired
+    ListAllJobsByCompanyUseCase listAllJobsByCompanyUseCase;
+
     @PostMapping("")
     @PreAuthorize("hasRole('COMPANY')")
     @Operation(summary = "Cadastro de vaga")
@@ -52,6 +57,24 @@ public class JobController {
 
             var result = createJobUseCase.execute(jobEntity);
 
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PostMapping("")
+    @PreAuthorize("hasRole('COMPANY')")
+    @Operation(summary = "Listagem de vagas")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(array = @ArraySchema(schema = @Schema(implementation = JobEntity.class)))
+            })
+    })
+    @SecurityRequirement(name = "jwt_auth")
+    public ResponseEntity<Object> listByCompany(HttpServletRequest request) {
+        try {
+            var companyId = request.getAttribute("company_id");
+            var result = this.listAllJobsByCompanyUseCase.execute(UUID.fromString(companyId.toString()));
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
