@@ -135,7 +135,7 @@ spring.jpa.hibernate.ddl-auto=update
 <p>A API expõe métricas para <strong>Prometheus</strong>, que podem ser acessadas em:</p>
 <p>🔗 <a href="http://localhost:9090" target="_blank">http://localhost:9090</a></p>
 
-<p>Os dashboards no <strong>Grafana</strong> foram configurados para exibir métricas sobre requisições, uso de CPU, latência e erros coletadas pelo **Prometheus.**</p>
+<p>Os dashboards no <strong>Grafana</strong> foram configurados para exibir métricas sobre requisições, uso de CPU, latência e erros coletadas através do <strong>Prometheus.</strong></p>
 <p>🔗 <a href="http://localhost:3000" target="_blank">http://localhost:9090</a></p>
 
 ---
